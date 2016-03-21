@@ -1,0 +1,7 @@
+.bashrc
+.profile
+.bash_history
+.bash_logout
+.vimrc
+.vim/*
+.viminfo
