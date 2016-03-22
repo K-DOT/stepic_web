@@ -1,3 +1,5 @@
 [user]
 	email = rhatutyunov@mail.ru
 	name = Ruben
+[core]
+	excludesfile = /home/box/.gitignore
