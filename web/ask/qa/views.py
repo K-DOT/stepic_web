@@ -3,7 +3,9 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse 
 from qa.models import Question, Answer
 from django.http import Http404
-# Create your views here.
+from qa.forms import AskForm, AnswerForm
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse 
 
 def pagination(request, qs):
     try:                                                                        
@@ -38,6 +40,19 @@ def question(request, id):
     return render(request, 'question.html', {
         'question' : question,
         'answers' : answers 
+    })
+
+def ask(request):
+    if request.method == 'POST':
+        form = AskForm(request.POST)
+        if form.is_valid:
+            question = form.save()    
+            print(reverse('question', question.id))
+            HttpResponseRedirect(question.get_url())
+    else:
+        form = AskForm()
+    return render(request, 'ask.html', {
+        'form' : form
     })
 
 def test(request, *args, **kwargs):

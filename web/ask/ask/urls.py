@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from qa.views import index, popular, question, test
+from qa.views import index, popular, question, ask, test
 from django.contrib import admin
 admin.autodiscover()
 
@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^login/', test),
     url(r'^signup/', test),
     url(r'^question/(?P<id>\d+)/', question, name='question'),
-    url(r'^ask/', test),
+    url(r'^ask/', ask),
     url(r'^popular/', popular),
     url(r'^new/', test)
 )
