@@ -1,33 +1,44 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse 
 from qa.models import Question, Answer
 from django.http import Http404
 # Create your views here.
 
+def pagination(request, qs):
+    try:                                                                        
+        limit = int(request.GET.get('limit', 10))                               
+    except ValueError:                                                          
+        limit = 10                                                              
+    try:                                                                        
+        page = int(request.GET.get('page', 1))                                  
+    except ValueError:                                                          
+        return Http404                                                          
+    paginator = Paginator(qs, limit)                                       
+    return paginator.page(page)
+    
+
 def index(request):
     objects = Question.objects.order_by('-added_at')
-    try:
-        limit = int(request.GET.get('limit', 10))
-    except ValueError:
-        limit = 10
-    try:                                                                        
-        page = int(request.GET.get('page', 1))                               
-    except ValueError:                                                          
-        return Http404
-    paginator = Paginator(objects, limit)
-    pages = paginator.page(page)
-    return render(request, 'index.html', {
-        'paginator' : paginator,
-        'pages' : pages 
+    questions = pagination(request, objects)
+    return render(request, 'questions.html', {
+        'questions' : questions
     })
     
 
 def popular(request):
-    pass
+    objects = Question.objects.order_by('-rating')
+    return render(request, 'questions.html', {                     
+        'questions' : pagination(request, objects)                                                 
+    })
 
 def question(request, id):
-    pass
+    question = get_object_or_404(Question, id=id)
+    answers = Answer.objects.filter(question=question)
+    return render(request, 'question.html', {
+        'question' : question,
+        'answers' : answers 
+    })
 
 def test(request, *args, **kwargs):
     return HttpResponse('OK')
