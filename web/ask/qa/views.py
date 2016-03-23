@@ -6,6 +6,7 @@ from django.http import Http404
 from qa.forms import AskForm, AnswerForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse 
+from django.views.decorators.http import require_GET
 
 def pagination(request, qs):
     try:                                                                        
@@ -37,18 +38,19 @@ def popular(request):
 def question(request, id):
     question = get_object_or_404(Question, id=id)
     answers = Answer.objects.filter(question=question)
+    form = AnswerForm()
     return render(request, 'question.html', {
         'question' : question,
-        'answers' : answers 
+        'answers' : answers,
+        'form' : form 
     })
 
 def ask(request):
     if request.method == 'POST':
         form = AskForm(request.POST)
-        if form.is_valid:
-            question = form.save()    
-            print(reverse('question', question.id))
-            HttpResponseRedirect(question.get_url())
+        if form.is_valid():
+            question = form.save()     
+            return HttpResponseRedirect(reverse('question', args=[question.id,]))
     else:
         form = AskForm()
     return render(request, 'ask.html', {
