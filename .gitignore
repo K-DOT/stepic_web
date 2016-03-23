@@ -7,4 +7,4 @@
 .vim/*
 .viminfo
 .mysql_history
-server_l11.py
+server_*.py
