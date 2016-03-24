@@ -16,6 +16,7 @@ class AnswerForm(forms.Form):
     question = forms.IntegerField()
 
     def save(self):
-        #question = Question.objects.get(id=question)
-        answer = Answer(**self.cleaned_data)
+        question = Question.objects.get(id=question)
+        answer = Answer(text=self.cleaned_data['text'], question=question)
+        answer.save()
         return answer

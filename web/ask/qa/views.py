@@ -65,7 +65,8 @@ def answer(request):
             answer = form.save()
             return HttpResponseRedirect(reverse('question', args=[answer.question,]))
         else:
-            return render(request, 'answer.html', {
+            print('Error')
+            return render(request, 'question.html', {
                 'form' : form,
             })
 
