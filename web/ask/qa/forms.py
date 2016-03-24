@@ -13,10 +13,17 @@ class AskForm(forms.Form):
 
 class AnswerForm(forms.Form):
     text = forms.CharField()
-    question = forms.IntegerField()
+    question = forms.IntegerField() 
+
+    def clean_question(self):
+        question = self.cleaned_data['question']
+        try:
+            question = Question.objects.get(id=question)
+        except Question.DoesNotExist:
+            raise forms.ValidationError('Invalid question ID!')
 
     def save(self):
-        question = Question.objects.get(id=question)
+        question = Question.objects.get(id=self.cleaned_data['question'])
         answer = Answer(text=self.cleaned_data['text'], question=question)
         answer.save()
         return answer

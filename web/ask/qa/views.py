@@ -60,10 +60,10 @@ def ask(request):
 @require_POST
 def answer(request):
     if request.method == 'POST':
-        form = AnswerForm()
+        form = AnswerForm(request.POST)
         if form.is_valid():
             answer = form.save()
-            return HttpResponseRedirect(reverse('question', args=[answer.question,]))
+            return HttpResponseRedirect(reverse('question', args=[answer.question.id,]))
         else:
             print('Error')
             return render(request, 'question.html', {
